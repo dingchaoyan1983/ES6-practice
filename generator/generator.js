@@ -9,6 +9,10 @@ var delay = function(time, cb) {
     }, time);
 };
 
+/**
+ * use generator to implement
+ * @type {number}
+ */
 var myDelayGenerator = function* () {
     console.log(yield delay(1000, function(resp) {
         this.next(resp);
@@ -21,3 +25,22 @@ var myDelayGenerator = function* () {
 
 var delayGenerator = new myDelayGenerator();
 delayGenerator.next();
+
+
+/**
+ * use Promise to implement the same functionality
+ */
+new Promise(function(resolve) {
+    delay(1000, function(resp) {
+        resolve(resp);
+    })
+}).then(function(resp) {
+        console.log(resp)
+        return new Promise(function(resolve) {
+            delay(2000, function(resp) {
+                resolve(resp);
+            })
+        });
+    }).then(function(resp) {
+        console.log(resp)
+    });
